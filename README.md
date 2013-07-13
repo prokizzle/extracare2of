@@ -5,8 +5,12 @@ Send CVS ExtraCare coupon reminders to OmniFocus
 
 This ruby script borrows some code from ttscoff's otask CLI OmniFocus gem.
 
-Install: bundle install
-Usage: bin\extracare2of _username_ _password_
+###Install:
+    bundle install
+
+
+###Usage:
+    bin\extracare2of _username_ _password_
 
 It will login to your CVS ExtraCare, parse for active coupons, and send tasks to OmniFocus to help remind you to use them. 
 
