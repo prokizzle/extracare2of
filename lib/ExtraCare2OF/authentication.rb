@@ -21,10 +21,15 @@ module ExtraCare2OF
       # puts page.parser.xpath("//body").to_html
     end
 
-    def request(page)
-      time_key = Time.now.to_i
-      page = @agent.get(page)
-      page.parser.xpath("//body").to_html
+    def request(link, request_id)
+      @hash[request_id] = {ready: false}
+      url = URI.escape(link)
+      @agent.read_timeout=30
+      temp = @agent.get(url)
+      # @log.debug "#{@url}"
+      returned_body = temp.parser.xpath("//body").to_html.to_s
+      @hash[request_id] = {url: url.to_s, body: returned_body, html: temp, ready: true}
+      {url: url.to_s, body: returned_body, html: temp, hash: request_id.to_i}
     end
 
     def logged_in?
