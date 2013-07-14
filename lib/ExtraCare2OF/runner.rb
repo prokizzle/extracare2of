@@ -14,9 +14,7 @@ module ExtraCare2OF
 
       @browser = Authentication.new(username: @username, password: @password)
       @settings = Settings.new(username: @username)
-      my_rewards_link = "https://www.cvs.com/extracare/landing.jsp?t=mySavingRewards"
       @browser.login
-      @rewards_source = @browser.request("https://m.cvs.com/mt/www.cvs.com/extracare/landing.jsp")
       # p @rewards_source
       of = app("OmniFocus")
       @dd= of.default_document
@@ -41,7 +39,6 @@ module ExtraCare2OF
         print_date = deal[3]
         @deals_array.push({:name => title,:due_date => parse_date(expire), :note => details, :start_date => parse_date(print_date)})
       end
-      # p rewards
       @deals_array
     end
 
