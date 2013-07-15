@@ -30,7 +30,7 @@ module ExtraCare2OF
     end
 
     def get_coupons
-      @rewards_source = async_response("https://m.cvs.com/mt/www.cvs.com/extracare/landing.jsp")
+      @rewards_source = async_response("https://m.cvs.com/mt/www.cvs.com/extracare/landing.jsp")[:body]
       @deals_array = Array.new
       rewards = @rewards_source.scan(/<div class="un_exEntry">\n<div><div class="un_red un_small un_bold">(.+)<.div><.div>\n<div class="un_xxsmall">(\d{2}\/\d{2}\/\d{4})<.div>\n<div class="un_xxsmall">(.+)<.div>\n<div class="un_xxsmall">\n<span class="prnted">Printed on (\d{2}\/\d{2}\/\d{4})<.span> <.div>/)
       rewards.each do |deal|

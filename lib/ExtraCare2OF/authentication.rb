@@ -3,11 +3,13 @@ require 'open-uri'
 
 module ExtraCare2OF
   class Authentication
+    attr_reader :hash
 
     def initialize(args)
       @username = args[:username]
       @password = args[:password]
       @agent = Mechanize.new
+      @hash = Hash.new
     end
 
     def login
