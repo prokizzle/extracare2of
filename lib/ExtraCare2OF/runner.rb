@@ -1,5 +1,6 @@
 require_relative 'authentication'
 require_relative 'settings'
+require_relative 'database'
 require 'highline/import'
 require 'appscript';include Appscript
 require 'amatch';include Amatch
@@ -11,8 +12,8 @@ module ExtraCare2OF
     def initialize(args)
       @username = args[:username]
       @password = args[:password]
-
-      @browser = Authentication.new(username: @username, password: @password)
+      @db       = Database.new(username: @username)
+      @browser  = Authentication.new(username: @username, password: @password)
       @settings = Settings.new(username: @username)
       @browser.login
       # p @rewards_source
@@ -72,19 +73,30 @@ module ExtraCare2OF
     end
 
     def send_to_of(coupon)
-      puts "----"
-      puts " Title: #{coupon[:name]}"
-      puts " - Due Date: #{coupon[:due_date]}"
-      puts " - Start Date: #{coupon[:start_date]}"
-      puts " - Note: #{coupon[:note]}"
-      @dd.make(:new => :inbox_task, :with_properties => coupon.to_hash)
+      @count = 0
+      # puts " - Sending #{get_coupons.size} tasks to OF"
+      unless @db.coupon_exists?(coupon[:name])
+        @db.add_coupon(name: coupon[:name], due_date: coupon[:due_date], start_date: coupon[:start_date])
+        puts "----"
+        puts " Title: #{coupon[:name]}"
+        puts " - Due Date: #{coupon[:due_date]}"
+        puts " - Start Date: #{coupon[:start_date]}"
+        puts " - Note: #{coupon[:note]}"
+        @dd.make(:new => :inbox_task, :with_properties => coupon.to_hash)
+        @count += 1
+      end
     end
 
 
     def run
       puts "Looking for coupons..."
-      puts " - Sending #{get_coupons.size} tasks to OF"
-      get_coupons.each {|coupon| send_to_of(coupon)}
+      @result = get_coupons
+      @result.each {|coupon| send_to_of(coupon)}
+      if @count > 0
+        puts "Sent #{@count} coupons to OmniFocus"
+      else
+        puts "No new coupons found."
+      end
       # puts "Sending extra bucks to card"
       # send_bucks_to_card
       # puts "Done"
