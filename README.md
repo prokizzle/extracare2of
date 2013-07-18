@@ -1,10 +1,13 @@
 ExtraCare Reminders
 ============
 
-Send CVS ExtraCare coupon reminders to OmniFocus, Reminders, Things, or DueApp
-Includes SQLite database support for tracking previously imported coupons
-Sets task name, due date, start date, and a note
+* Send CVS ExtraCare coupon reminders to OmniFocus, Reminders, Things, or DueApp
+* Includes SQLite database support for tracking previously imported coupons
+* Sets task name, due date, start date, and a note
+
+
 This script performs the following actions:
+
 * Logs into CVS mobile web
 * Scans the ExtraCare page for active coupons on your card/account
 * Checks coupons against the database for previously imported coupons
