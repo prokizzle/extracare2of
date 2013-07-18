@@ -1,0 +1,6 @@
+---
+:services:
+  :use_omnifocus: true
+  :use_reminders: false
+  :use_things: false
+  :use_dueapp: false
