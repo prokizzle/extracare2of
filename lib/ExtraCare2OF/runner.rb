@@ -1,6 +1,7 @@
 require_relative 'authentication'
 require_relative 'settings'
 require_relative 'database'
+require_relative 'services'
 require 'highline/import'
 require 'appscript';include Appscript
 require 'amatch';include Amatch
@@ -71,8 +72,7 @@ module ExtraCare2OF
       return newdate
     end
 
-    def send_to_of(coupon)
-      @count = 0
+    def process_coupon(coupon)
       # puts " - Sending #{get_coupons.size} tasks to OF"
       unless @db.coupon_exists?(coupon[:name])
         @db.add_coupon(name: coupon[:name], due_date: coupon[:due_date], start_date: coupon[:start_date])
@@ -81,8 +81,11 @@ module ExtraCare2OF
         puts " - Due Date: #{coupon[:due_date]}"
         puts " - Start Date: #{coupon[:start_date]}"
         puts " - Note: #{coupon[:note]}"
-        @dd.make(:new => :inbox_task, :with_properties => coupon.to_hash)
-        @count += 1
+        CreateTask::OmniFocus.new(coupon.to_hash) if @settings.use_omnifocus
+        CreateTask::Reminders.new(coupon.to_hash) if @settings.use_reminders
+        CreateTask::Things.new(coupon.to_hash) if @settings.use_things
+        CreateTask::DueApp.new(coupon.to_hash) if @settings.use_dueapp
+        # Services::Reminders.new(coupon.to_hash)
       end
     end
 
@@ -90,7 +93,7 @@ module ExtraCare2OF
     def run
       puts "Looking for coupons..."
       @result = get_coupons
-      @result.each {|coupon| send_to_of(coupon)}
+      @result.each {|coupon| process_coupon(coupon)}
       if @count > 0
         puts "Sent #{@count} coupons to OmniFocus"
       else
