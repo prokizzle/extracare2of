@@ -14,11 +14,10 @@ module ExtraCare2OF
       @password = args[:password]
       @db       = Database.new(username: @username)
       @browser  = Authentication.new(username: @username, password: @password)
-      @settings = Settings.new(username: @username)
+      @settings = Settings.new
       @browser.login
+      @count = 0
       # p @rewards_source
-      of = app("OmniFocus")
-      @dd= of.default_document
     end
 
     def async_response(url)
