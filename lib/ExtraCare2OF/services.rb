@@ -20,7 +20,7 @@ module CreateTask
         days = (60 * 60 * 24 * $1.to_i)
         newdate = Time.now + days
       else
-        newdate = Chronic.parse(datestring, {:context => :future, :ambiguous_time_range => 8})
+        newdate = Chronic.parse(datestring.to_s, {:context => :future, :ambiguous_time_range => 8})
       end
       # parsed = newdate.strftime('%D %l:%M%p').gsub(/\s+/,' ');
       # return parsed =~ /1969/ ? false : parsed

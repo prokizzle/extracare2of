@@ -8,7 +8,7 @@ module ExtraCare2OF
     def initialize(args)
       @handle = args[ :username]
       open
-      # create_tables
+      create_tables
       tasks
     end
 
