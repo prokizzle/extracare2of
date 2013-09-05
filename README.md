@@ -39,7 +39,7 @@ _Note: This is for paper coupons only. The actual coupons are on your CVS receip
 
 ## Credits
 
-This ruby script borrows some code from [ttscoff's][6764-006] [otask](!github) CLI OmniFocus gem.
+This ruby script borrows some code from [ttscoff's][6764-006] [otask](http://brettterpstra.com/2011/07/02/otask-cli-for-omnifocus/) CLI OmniFocus gem.
 
 ## License
 
