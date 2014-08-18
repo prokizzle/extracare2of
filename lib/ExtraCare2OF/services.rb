@@ -2,12 +2,12 @@ module CreateTask
   require 'chronic'
 
   class OmniFocus
-    require 'appscript';include Appscript
+    require 'appscript'#;include Appscript
 
 
     def initialize(args)
-      args[:due_date] = parse_date(args[:due_date])
-      args[:start_date] = parse_date(args[:start_date])
+      args[:due_date] = parse_date(args[:due_date]) if args[:due_date]
+      args[:start_date] = parse_date(args[:start_date]) if args[:start_date]
 
       of = app("OmniFocus")
       @dd= of.default_document
