@@ -1,4 +1,3 @@
-require 'yaml'
 module ExtraCare2OF
   class Settings
     attr_reader :debug, :use_omnifocus, :use_reminders, :use_things, :use_dueapp

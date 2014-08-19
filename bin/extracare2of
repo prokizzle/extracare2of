@@ -1,4 +1,6 @@
-require_relative '../lib/extracare2of/runner.rb'
+#!/usr/bin/ruby
+
+require_relative '../lib/extracare2of.rb'
 username = ARGV[0]
 password = ARGV[1]
 runner = ExtraCare2OF::Runner.new(username: username, password: password)
