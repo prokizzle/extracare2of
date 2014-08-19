@@ -1,11 +1,3 @@
-require_relative 'authentication'
-require_relative 'settings'
-require_relative 'database'
-require_relative 'services'
-require 'highline/import'
-require 'appscript';include Appscript
-require 'amatch';include Amatch
-require 'chronic'
 
 module ExtraCare2OF
   class Runner
@@ -13,8 +5,8 @@ module ExtraCare2OF
     def initialize(args)
       @username = args[:username]
       @password = args[:password]
-      @db       = Database.new(username: @username)
-      @browser  = Authentication.new(username: @username, password: @password)
+      @db       = ExtraCare2OF::Database.new(username: @username)
+      @browser  = ExtraCare2OF::Authentication.new(username: @username, password: @password)
       @settings = Settings.new
       @browser.login
       @count = 0
@@ -44,8 +36,8 @@ module ExtraCare2OF
         name = deal[0]
         due_date = deal[1]
         note = deal[2]
-        # start_date = deal[3]
-        @deals_array.push({:name => name,:due_date => parse_date(due_date), :start_date => Time.now, :note => note})
+        # defer_date = deal[3]
+        @deals_array.push({:name => name,:due_date => parse_date(due_date), :defer_date => Time.now, :note => note})
       end
       @deals_array
     end
@@ -81,11 +73,11 @@ module ExtraCare2OF
     def process_coupon(coupon)
       # puts " - Sending #{get_coupons.size} tasks to OF"
       unless @db.coupon_exists?(coupon[:name])
-        @db.add_coupon(name: coupon[:name], due_date: coupon[:due_date], start_date: coupon[:start_date])
+        @db.add_coupon(name: coupon[:name], due_date: coupon[:due_date], defer_date: coupon[:defer_date])
         puts "----"
         puts " Title: #{coupon[:name]}"
         puts " - Due Date: #{coupon[:due_date]}"
-        puts " - Start Date: #{coupon[:start_date]}"
+        puts " - Start Date: #{coupon[:defer_date]}"
         puts " - Note: #{coupon[:note]}"
         CreateTask::OmniFocus.new(coupon.to_hash) if @settings.use_omnifocus
         CreateTask::Reminders.new(coupon.to_hash) if @settings.use_reminders
