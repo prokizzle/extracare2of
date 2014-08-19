@@ -1,11 +1,3 @@
-require_relative 'authentication'
-require_relative 'settings'
-require_relative 'database'
-require_relative 'services'
-require 'highline/import'
-require 'appscript';include Appscript
-require 'amatch';include Amatch
-require 'chronic'
 
 module ExtraCare2OF
   class Runner
