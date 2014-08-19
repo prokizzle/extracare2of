@@ -36,7 +36,7 @@ module ExtraCare2OF
 
 
     def open
-      @db = SQLite3::Database.new( "./db/#{@handle}.db" )
+      @db = SQLite3::Database.new( "./db/coupons.db" )
     end
 
     def close
