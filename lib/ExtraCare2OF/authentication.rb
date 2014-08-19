@@ -1,6 +1,3 @@
-require 'mechanize'
-require 'open-uri'
-
 module ExtraCare2OF
   class Authentication
     attr_reader :hash
