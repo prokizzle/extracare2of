@@ -1,3 +1,5 @@
+#!/usr/bin/ruby
+
 require_relative '../lib/extracare2of/runner.rb'
 username = ARGV[0]
 password = ARGV[1]

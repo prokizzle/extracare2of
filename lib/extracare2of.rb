@@ -7,7 +7,7 @@ require 'mechanize'
 require 'open-uri'
 
 module ExtraCare2OF
-    Dir[File.dirname(__FILE__) + '/ExtraCare2OF/*.rb'].each do |file|
+    Dir[File.dirname(__FILE__) + '/extracare2of/*.rb'].each do |file|
     require file
   end
 end
