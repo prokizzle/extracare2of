@@ -14,7 +14,7 @@ This script performs the following actions:
 
 ## Code Example
 
-    $ ruby bin/extracare2of username password
+    $ extracare2of username password
     $ Looking for coupons...
     $ ----
     $  Title: 10% off skincare products
@@ -26,9 +26,7 @@ This script performs the following actions:
 
 ## Installation
 
-    Bundle install
-
-Edit `config/config.yml` to choose which reminder app you'd like to use.
+    gem install extracare2of
 
 ## Todo
 
