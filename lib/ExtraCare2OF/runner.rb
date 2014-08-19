@@ -5,8 +5,8 @@ module ExtraCare2OF
     def initialize(args)
       @username = args[:username]
       @password = args[:password]
-      @db       = Database.new(username: @username)
-      @browser  = Authentication.new(username: @username, password: @password)
+      @db       = ExtraCare2OF::Database.new(username: @username)
+      @browser  = ExtraCare2OF::Authentication.new(username: @username, password: @password)
       @settings = Settings.new
       @browser.login
       @count = 0
