@@ -6,8 +6,8 @@ require 'chronic'
 require 'mechanize'
 require 'open-uri'
 
-module ExtraCare2OF
-    Dir[File.dirname(__FILE__) + '/extracare2of/*.rb'].each do |file|
+module Extracare2of
+  Dir[File.dirname(__FILE__) + '/extracare2of/*.rb'].each do |file|
     require file
   end
 end
