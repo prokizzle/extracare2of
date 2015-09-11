@@ -1,3 +1,4 @@
+# Handles writing to and reading from database
 require 'sqlite3'
 
 module Extracare2of
@@ -9,7 +10,7 @@ module Extracare2of
       @handle = `whoami`
       db_path = "#{ENV['HOME']}/.extracare2of/db/coupons.db"
       create_db unless File.exist?(db_path)
-      @db = SQLite3::Database.new( db_path )
+      @db = SQLite3::Database.new(db_path)
     end
 
     def create_db
@@ -43,11 +44,10 @@ module Extracare2of
     end
 
     def coupon_exists?(name)
-      @db.execute( "select 1 where exists(
+      @db.execute("select 1 where exists(
             select 1
             from coupons
-            where name = ?
-        ) ", [name] ).any?
+            where name = ?)", [name]).any?
     end
   end
 end

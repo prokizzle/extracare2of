@@ -1,9 +1,10 @@
 #!/usr/bin/ruby
 
-require 'extracare2of'
+# require 'extracare2of'
+require_relative '../lib/extracare2of'
 runner = Extracare2of::Runner.new
 
-if ARGV[0] == "init"
+if ARGV[0] == 'init'
   runner.init
 else
   runner.run

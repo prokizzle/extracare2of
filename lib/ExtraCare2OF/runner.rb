@@ -1,103 +1,87 @@
-
+# Extracare2of Gem
 module Extracare2of
+  # Handles main logic of fetching, storing, and sending coupon data
   class Runner
-
-    def initialize(*)
+    def initialize
       @db       = Extracare2of::Database.new
       @browser  = Extracare2of::Authentication.new
       @settings = Settings.new
       @count = 0
-      # p @rewards_source
+      @deals_array = []
     end
 
     def init
       @browser.authenticate
     end
 
-    def async_response(url)
+    def response(url)
       request_id = Time.now.to_i
       @browser.request(url, request_id)
       until @browser.hash[request_id][:ready]
-        sleep 0.1
+        sleep 1
       end
+      puts @browser.hash
       @browser.hash[request_id]
+    end
+
+    def fetch_coupons_page
+      url = 'https://m.cvs.com/mt/www.cvs.com/extracare/landing.jsp'
+      response(url)[:body]
     end
 
     # [fix] - rewards scanner not picking up all deals
     # [todo] - add extrabucks support
-    def get_coupons
-      @rewards_source = async_response("https://m.cvs.com/mt/www.cvs.com/extracare/landing.jsp")[:body]
-      if $debug
-        puts @rewards_source
-        exit
+    def coupons
+      fetch_coupons_page.scan(/<div class="un_exEntry">\n.+\>(.+)\<.div><.div.+$\n.+\>(.+)\<.div.+$\n.+\>(.+)\<.div.+$\n.+$/).each do |deal|
+        @deals_array.push(
+          name: deal[0], due_date: parse_date(deal[1]),
+          defer_date: Time.now, note: deal[2]
+        )
       end
-      @deals_array = Array.new
-      rewards = @rewards_source.scan(/<div class="un_exEntry">\n.+\>(.+)\<.div><.div.+$\n.+\>(.+)\<.div.+$\n.+\>(.+)\<.div.+$\n.+$/)
-      rewards.each do |deal|
-        name = deal[0]
-        due_date = deal[1]
-        note = deal[2]
-        # defer_date = deal[3]
-        @deals_array.push({name: name,due_date: parse_date(due_date), defer_date: Time.now, note: note})
-      end
+      puts fetch_coupons_page.scan(/<div class="un_exEntry">\n.+\>(.+)\<.div><.div.+$\n.+\>(.+)\<.div.+$\n.+\>(.+)\<.div.+$\n.+$/)
       @deals_array
     end
 
-    def send_bucks_to_card
-      bucks = @rewards_source.scan(regex)
-      bucks.each do |buck|
-        link = buck.match(url)
-        link_page = @browser.request(link)
-        confirmation = @browser.request(button)
-        if confirmation == regex
-          puts "Extra Bucks sent to card"
-        else
-          puts "Error: Unable to send to card"
-        end
-      end
-    end
-
-    #borrowed from ttscoff's otask
-    def parse_date(datestring)
-      days = 0
-      if datestring =~ /^\+(\d+)$/
-        days = (60 * 60 * 24 * $1.to_i)
-        newdate = Time.now + days
-      else
-        newdate = Chronic.parse(datestring, {context: :future, ambiguous_time_range: 8})
-      end
-      # parsed = newdate.strftime('%D %l:%M%p').gsub(/\s+/,' ');
-      # return parsed =~ /1969/ ? false : parsed
-      return newdate
-    end
-
-    def process_coupon(coupon)
-      # puts " - Sending #{get_coupons.size} tasks to OF"
-      return false if @db.coupon_exists?(coupon[:name])
-      @db.add_coupon(name: coupon[:name], due_date: coupon[:due_date], defer_date: coupon[:defer_date])
-      puts "----"
+    def verbose_coupon_task(coupon)
+      puts '----'
       puts " Title: #{coupon[:name]}"
       puts " - Due Date: #{coupon[:due_date]}"
       puts " - Start Date: #{coupon[:defer_date]}"
       puts " - Note: #{coupon[:note]}"
-      CreateTask::OmniFocus.new(coupon.to_hash) if @settings.use_omnifocus
-      CreateTask::Reminders.new(coupon.to_hash) if @settings.use_reminders
-      CreateTask::Things.new(coupon.to_hash) if @settings.use_things
-      CreateTask::DueApp.new(coupon.to_hash) if @settings.use_dueapp
-      # Services::Reminders.new(coupon.to_hash)
     end
 
+    def process_coupon(coupon)
+      return false if @db.coupon_exists?(coupon[:name])
+      Coupon.create(coupon)
+      verbose_coupon_task(coupon)
+      CreateTask::Helper.new_task(coupon, task_app)
+    end
+
+    def task_app
+      return 'omnifocus' if @settings.use_omnifocus
+      return 'things' if @settings.use_things
+      return 'reminders' if @settings.use_reminders
+      return 'dueapp' if @settings.use_dueapp
+    end
+
+    def default_parsed_date(datestring)
+      Chronic.parse(
+        datestring.to_s,
+        context: :future, ambiguous_time_range: 8
+      )
+    end
+
+    def parse_date(datestring)
+      return default_parsed_date(datestring) unless datestring =~ /^\+(\d+)$/
+      days = (60 * 60 * 24 * Regexp.last_match[1].to_i)
+      Time.now + days
+    end
 
     def run
-      puts "Looking for coupons..."
-      @result = get_coupons
-      @result.each {|coupon| process_coupon(coupon)}
-      if @count > 0
-        puts "Sent #{@count} coupons to OmniFocus"
-      else
-        puts "No new coupons found."
-      end
+      puts 'Looking for coupons...'
+      coupons.select { |coupon| process_coupon(coupon) }
+      csize = coupons.size
+      puts "Found #{coupons.size} coupons."
     end
-
   end
 end
