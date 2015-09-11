@@ -1,4 +1,4 @@
-module ExtraCare2OF
+module Extracare2of
   class Authentication
     attr_reader :hash
 

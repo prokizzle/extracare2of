@@ -1,12 +1,12 @@
 
-module ExtraCare2OF
+module Extracare2of
   class Runner
 
     def initialize(args)
       @username = args[:username]
       @password = args[:password]
-      @db       = ExtraCare2OF::Database.new(username: @username)
-      @browser  = ExtraCare2OF::Authentication.new(username: @username, password: @password)
+      @db       = Extracare2of::Database.new(username: @username)
+      @browser  = Extracare2of::Authentication.new(username: @username, password: @password)
       @settings = Settings.new
       @browser.login
       @count = 0

@@ -1,3 +1,3 @@
-module ExtraCare2OF
-  ExtraCare2OF::VERSION = 0.2
+module Extracare2of
+  VERSION = "0.2"
 end

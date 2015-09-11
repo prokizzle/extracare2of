@@ -1,4 +1,4 @@
-module ExtraCare2OF
+module Extracare2of
   class Settings
     attr_reader :debug, :use_omnifocus, :use_reminders, :use_things, :use_dueapp
 

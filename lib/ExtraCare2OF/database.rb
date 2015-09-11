@@ -1,6 +1,6 @@
 require 'sqlite3'
 
-module ExtraCare2OF
+module Extracare2of
   class Database
     attr_accessor :add_user
     attr_reader :add_user
