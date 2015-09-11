@@ -5,8 +5,8 @@ module Extracare2of
     attr_accessor :add_user
     attr_reader :add_user
 
-    def initialize(args)
-      @handle = args[ :username]
+    def initialize
+      @handle = `whoami`
       db_path = "#{ENV['HOME']}/.extracare2of/db/coupons.db"
       create_db unless File.exist?(db_path)
       @db = SQLite3::Database.new( db_path )

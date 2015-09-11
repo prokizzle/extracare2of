@@ -2,15 +2,16 @@
 module Extracare2of
   class Runner
 
-    def initialize(args)
-      @username = args[:username]
-      @password = args[:password]
-      @db       = Extracare2of::Database.new(username: @username)
-      @browser  = Extracare2of::Authentication.new(username: @username, password: @password)
+    def initialize(*)
+      @db       = Extracare2of::Database.new
+      @browser  = Extracare2of::Authentication.new
       @settings = Settings.new
-      @browser.login
       @count = 0
       # p @rewards_source
+    end
+
+    def init
+      @browser.authenticate
     end
 
     def async_response(url)

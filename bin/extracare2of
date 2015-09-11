@@ -1,7 +1,10 @@
 #!/usr/bin/ruby
 
 require_relative '../lib/extracare2of.rb'
-username = ARGV[0]
-password = ARGV[1]
-runner = Extracare2of::Runner.new(username: username, password: password)
-runner.run
+runner = Extracare2of::Runner.new
+
+if ARGV[0] == "init"
+  runner.init
+else
+  runner.run
+end

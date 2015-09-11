@@ -12,9 +12,9 @@ This script performs the following actions:
 + Checks coupons against the database for previously imported coupons
 + Sends every new coupon to the task manager of your choice
 
-## Code Example
+## Usage
 
-    $ extracare2of username password
+    $ extracare2of
     $ Looking for coupons...
     $ ----
     $  Title: 10% off skincare products
@@ -39,6 +39,8 @@ Here you can change which todo manager you use.
       :use_reminders: false
       :use_things: false
       :use_dueapp: false
+
+The first time you run `extracare2of` you will be prompted for a username and password. The session will then be serialized and stored in `~/.extracare2of/config/session.yml`. Your password is not saved in plaintext. You will then be able to use this without having to log in again.
 
 ## Todo
 
