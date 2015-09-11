@@ -21,12 +21,24 @@ This script performs the following actions:
     $  - Due Date: 8/10/2013
     $  - Start Date: 8/1/2013
     $  - Note: Reedemable in-store only
-    
+
 
 
 ## Installation
 
     gem install extracare2of
+
+## Configuration
+
+Config file is location at `~/.extracare2of/config/config.yml`.
+Here you can change which todo manager you use.
+
+        ---
+    :services:
+      :use_omnifocus: true
+      :use_reminders: false
+      :use_things: false
+      :use_dueapp: false
 
 ## Todo
 

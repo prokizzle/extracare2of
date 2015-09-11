@@ -3,7 +3,7 @@ module ExtraCare2OF
     attr_reader :debug, :use_omnifocus, :use_reminders, :use_things, :use_dueapp
 
     def initialize
-      @filename      = File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "config", "config.yml"))
+      @filename      = "#{ENV['HOME']}/.extracare2of/config/config.yml"
       unless File.exists?(@filename)
         config = {services: {
                     :use_omnifocus => true,
