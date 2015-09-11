@@ -1,23 +1,42 @@
-module ExtraCare2OF
+require 'highline/import'
+
+module Extracare2of
   class Authentication
     attr_reader :hash
 
-    def initialize(args)
-      @username = args[:username]
-      @password = args[:password]
-      @agent = Mechanize.new
+    def initialize(*)
+      load_session if session_exists?
+      authenticate unless session_exists?
       @hash = Hash.new
+    end
+
+    def session_exists?
+      File.exist?("#{ENV['HOME']}/.extracare2of/session.yml")
+    end
+
+    def load_session
+      session_file = open("#{ENV['HOME']}/.extracare2of/session.yml")
+      @agent = Mechanize.new do |a|
+        a.cookie_jar = YAML.load(session_file)
+      end
+    end
+
+    def authenticate
+      @agent = Mechanize.new
+      login
+      open("#{ENV['HOME']}/.extracare2of/session.yml", 'w') { |f|
+        f.puts @agent.cookie_jar.to_yaml
+      }
     end
 
     def login
       page = @agent.get("https://m.cvs.com/mt/www.cvs.com/account/login.jsp")
       form = page.forms.first
-      form['/atg/userprofiling/ProfileFormHandler.value.login']    = @username
-      form['/atg/userprofiling/ProfileFormHandler.value.password'] = @password
+      form['/atg/userprofiling/ProfileFormHandler.value.login']    = ask("username: ")
+      form['/atg/userprofiling/ProfileFormHandler.value.password'] = ask("password: ")
       page = form.submit
       @page = page
       sleep 3
-      # puts page.parser.xpath("//body").to_html
     end
 
     def request(link, request_id)

@@ -5,7 +5,7 @@ require 'extracare2of/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "extracare2of"
-  spec.version       = ExtraCare2OF::VERSION
+  spec.version       = Extracare2of::VERSION
   spec.authors       = ["Nick Prokesch"]
   spec.email         = ["nick@prokes.ch"]
   spec.summary       = %q{send CVS ExtraCare coupon reminders to OmniFocus}
